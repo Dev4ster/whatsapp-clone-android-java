@@ -30,8 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editDDD;
     private EditText editTelReg;
     private EditText editName;
-    private Button buttonCadastrar;
-    private String[] permissoesNecessarias = new String[]{
+    private Button buttonRegister;
+    private String[] necessaryPermissions = new String[]{
             Manifest.permission.SEND_SMS
     };
 
@@ -46,19 +46,19 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Permissions.validaPermissoes(1,this, permissoesNecessarias);
+        Permissions.validatePermissions(1,this, necessaryPermissions);
         editPhone = findViewById(R.id.editPhone);
         editDDD = findViewById(R.id.editDDD);
         editTelReg = findViewById(R.id.editTelReg);
         editName = findViewById(R.id.editName);
-        buttonCadastrar = findViewById(R.id.buttonCadastrar);
+        buttonRegister = findViewById(R.id.buttonRegister);
 
 
         setInputMask(editPhone, masks[0], null);
         setInputMask(editDDD, masks[1], editPhone);
         setInputMask(editTelReg, masks[2], editDDD);
 
-        buttonCadastrar.setOnClickListener(new View.OnClickListener() {
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userName = editName.getText().toString();
@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                 String userDDD = editDDD.getText().toString();
                 String userRegTel = editTelReg.getText().toString();
 
-                String telefoneCompleto = userRegTel + userDDD + userTelephone;
-                String telephoneFormatted = telefoneCompleto
+                String telephoneCompleted = userRegTel + userDDD + userTelephone;
+                String telephoneFormatted = telephoneCompleted
                         .replace("+", "")
                         .replace("-", "");
 
@@ -78,8 +78,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Save token
 
-                Preferences preferencias = new Preferences(getApplicationContext());
-                preferencias.salvarUsuario(userName, telephoneFormatted, token);
+                Preferences preferences = new Preferences(getApplicationContext());
+                preferences.saveUser(userName, telephoneFormatted, token);
 
                 // Send sms
 

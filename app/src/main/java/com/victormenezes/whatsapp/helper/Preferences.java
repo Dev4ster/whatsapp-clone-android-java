@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 
 public class Preferences {
-    private Context contexto;
+    private Context context;
     private SharedPreferences sharedPreferences;
     private final String PREFERENCES_NAME = "APP_WHATS";
     private final int MODE = 0;
@@ -17,13 +17,13 @@ public class Preferences {
     public  static final   String CHAVE_TOKEN = "token";
 
 
-    public Preferences(Context contexto){
-        this.contexto = contexto;
-        sharedPreferences = contexto.getSharedPreferences(PREFERENCES_NAME, MODE);
+    public Preferences(Context context){
+        this.context = context;
+        sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, MODE);
         editor = sharedPreferences.edit();
     }
 
-    public void salvarUsuario(String nome, String telefone, String token){
+    public void saveUser(String nome, String telefone, String token){
         editor.putString(CHAVE_NOME,nome);
         editor.putString(CHAVE_TELEFONE,telefone);
         editor.putString(CHAVE_TOKEN,token);
@@ -31,12 +31,12 @@ public class Preferences {
 
     }
 
-    public HashMap<String, String>  getDadosUsuario(){
-        HashMap<String, String> dados = new HashMap<>();
-        dados.put(CHAVE_NOME, sharedPreferences.getString(CHAVE_NOME,CHAVE_NOME));
-        dados.put(CHAVE_TELEFONE, sharedPreferences.getString(CHAVE_TELEFONE,CHAVE_TELEFONE));
-        dados.put(CHAVE_TOKEN, sharedPreferences.getString(CHAVE_TOKEN,CHAVE_TOKEN));
-        return dados;
+    public HashMap<String, String>  getUser(){
+        HashMap<String, String> userData = new HashMap<>();
+        userData.put(CHAVE_NOME, sharedPreferences.getString(CHAVE_NOME,CHAVE_NOME));
+        userData.put(CHAVE_TELEFONE, sharedPreferences.getString(CHAVE_TELEFONE,CHAVE_TELEFONE));
+        userData.put(CHAVE_TOKEN, sharedPreferences.getString(CHAVE_TOKEN,CHAVE_TOKEN));
+        return userData;
     }
 
 }
