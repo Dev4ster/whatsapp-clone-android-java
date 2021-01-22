@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import com.victormenezes.whatsapp.R;
+import com.victormenezes.whatsapp.config.ConfigFirebase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,6 +24,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         editLoginEmail = findViewById(R.id.editLoginEmail);
         editLoginPassword = findViewById(R.id.editLoginPassword);
+
+        ConfigFirebase.getFirebase().child("teste").setValue("helllo");
 
     }
 
