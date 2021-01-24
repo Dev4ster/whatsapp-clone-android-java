@@ -98,6 +98,9 @@ public class ContactsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), ConversationActivity.class);
+                Contact contact = contacts.get(position);
+                intent.putExtra("name", contact.getName());
+                intent.putExtra("email", contact.getEmail());
                 startActivity(intent);
             }
         });
