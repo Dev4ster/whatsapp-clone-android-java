@@ -13,6 +13,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.victormenezes.whatsapp.R;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
 import com.victormenezes.whatsapp.model.User;
@@ -59,17 +62,47 @@ public class RegisterActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "Sucesso ao cadastrar usuário", Toast.LENGTH_LONG)
                             .show();
+                    user.setId(task.getResult().getUser().getUid());
+                    user.save();
+                    auth.signOut();
+                    finish();
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Erro ao cadastrar usuário", Toast.LENGTH_LONG)
+                    String error = "Erro ao cadastrar usuário";
+                    try {
+                        throw task.getException();
+
+                    }catch (FirebaseAuthWeakPasswordException e){
+                        error = "Digite uma senha mais forte, contendo 6 caracteres e com letras e numeros";
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        error = "O email digitado é inválido, digite um novo email";
+                    }catch (FirebaseAuthUserCollisionException e) {
+                        error = "Já existe um usuário com este email cadastrado";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG)
                             .show();
                 }
             }
         }).addOnFailureListener(RegisterActivity.this, new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Erro ao se conectar com servidor", Toast.LENGTH_LONG)
+            public void onFailure(@NonNull Exception erro) {
+                String error = "Erro ao cadastrar usuário";
+                try {
+                    throw erro;
+
+                }catch (FirebaseAuthWeakPasswordException e){
+                    error = "Digite uma senha mais forte, contendo 6 caracteres e com letras e numeros";
+                } catch (FirebaseAuthInvalidCredentialsException e) {
+                    error = "O email digitado é inválido, digite um novo email";
+                }catch (FirebaseAuthUserCollisionException e) {
+                    error = "Já existe um usuário com este email cadastrado";
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG)
                         .show();
             }
         });
