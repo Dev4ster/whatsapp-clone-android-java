@@ -3,6 +3,7 @@ package com.victormenezes.whatsapp.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,22 +14,33 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.victormenezes.whatsapp.R;
+import com.victormenezes.whatsapp.adapter.TabAdapter;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
+import com.victormenezes.whatsapp.helper.SlidingTabLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private FirebaseAuth auth;
+    private SlidingTabLayout slidingTabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
+        slidingTabLayout = findViewById(R.id.stl_tabs);
+        viewPager = findViewById(R.id.viewPager);
         auth = ConfigFirebase.getFirebaseAuthentication();
 
         toolbar.setTitle("Meu APP");
         setSupportActionBar(toolbar);
+
+        // config adapter
+        TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), 0);
+        viewPager.setAdapter( tabAdapter );
+        slidingTabLayout.setViewPager(viewPager);
     }
 
     @Override
