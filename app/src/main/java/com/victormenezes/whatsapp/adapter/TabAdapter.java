@@ -25,10 +25,10 @@ public class TabAdapter extends FragmentStatePagerAdapter {
 
         switch (position){
             case 0:
-                fragment = new ConversationsFragment();
+                fragment = new ContactsFragment();
                 break;
             case 1:
-                fragment = new ContactsFragment();
+                fragment = new ConversationsFragment();
                 break;
         }
         return fragment;

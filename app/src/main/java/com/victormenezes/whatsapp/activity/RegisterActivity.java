@@ -3,6 +3,7 @@ package com.victormenezes.whatsapp.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.victormenezes.whatsapp.R;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
+import com.victormenezes.whatsapp.helper.Base64Custom;
 import com.victormenezes.whatsapp.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -62,11 +64,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "Sucesso ao cadastrar usuário", Toast.LENGTH_LONG)
                             .show();
-                    user.setId(task.getResult().getUser().getUid());
+                    String customId = Base64Custom.crypt(user.getEmail());
+                    user.setId(customId);
                     user.save();
-                    auth.signOut();
-                    finish();
-
+                    openLoginActivity();
                 }
             }
         }).addOnFailureListener(RegisterActivity.this, new OnFailureListener() {
@@ -89,5 +90,11 @@ public class RegisterActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    private void openLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

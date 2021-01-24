@@ -12,7 +12,7 @@
 
 <com.victormenezes.whatsapp.helper.SlidingTabLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:id="@+id/stl_tabs"
     android:background="@color/colorPrimary"
     />
