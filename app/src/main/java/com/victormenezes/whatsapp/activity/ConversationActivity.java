@@ -1,20 +1,27 @@
 package com.victormenezes.whatsapp.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.victormenezes.whatsapp.R;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
 import com.victormenezes.whatsapp.helper.Base64Custom;
 import com.victormenezes.whatsapp.model.Message;
+
+import java.util.ArrayList;
 
 public class ConversationActivity extends AppCompatActivity {
 
@@ -29,6 +36,13 @@ public class ConversationActivity extends AppCompatActivity {
 
     private String idUserCurrent;
 
+    private ArrayList<String> messages;
+    private ArrayAdapter adapter;
+    private String contactUserId;
+
+    private ValueEventListener messagesListener;
+
+    private  DatabaseReference messagesFirebase;
 
 
     @Override
@@ -46,6 +60,7 @@ public class ConversationActivity extends AppCompatActivity {
         if(extras != null) {
             contactName = extras.getString("name");
             contactEmail = extras.getString("email");
+            contactUserId =  Base64Custom.crypt(contactEmail);
         }
 
 
@@ -61,6 +76,45 @@ public class ConversationActivity extends AppCompatActivity {
             }
         });
 
+        // mont listview and adapter
+        messages = new ArrayList<>();
+        messages.add("oiii");
+        adapter = new ArrayAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                messages
+        );
+
+        listMessages.setAdapter( adapter );
+
+        // get messages firebase
+
+         messagesFirebase = ConfigFirebase.getFirebase()
+                .child("mensagens")
+                .child(idUserCurrent)
+                .child(contactUserId);
+
+        // create listener
+
+        messagesListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messages.clear();
+                for(DataSnapshot data : snapshot.getChildren()){
+                    Message message = data.getValue(Message.class);
+                    messages.add(message.getMessage());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        // add listener
+        messagesFirebase.addValueEventListener(messagesListener);
     }
 
     public void send(View view){
@@ -70,7 +124,6 @@ public class ConversationActivity extends AppCompatActivity {
             Message message = new Message();
             message.setIdUser(idUserCurrent);
             message.setMessage(textMessage);
-            String contactUserId = Base64Custom.crypt(contactEmail);
             saveMessage(idUserCurrent, contactUserId, message);
 
         }
@@ -83,7 +136,7 @@ public class ConversationActivity extends AppCompatActivity {
                     .child(currentUserId)
                     .child(contactUserId);
             database.push().setValue(message);
-
+            editMessage.setText("");
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -91,4 +144,9 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        messagesFirebase.removeEventListener(messagesListener);
+        super.onStop();
+    }
 }

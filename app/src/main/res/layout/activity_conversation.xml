@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_conversation"
+        android:layout_above="@id/view_input"
         android:layout_marginTop="0dp"
         android:padding="8dp" />
 
