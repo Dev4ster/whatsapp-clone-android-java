@@ -1,6 +1,7 @@
 package com.victormenezes.whatsapp.activity;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
@@ -10,13 +11,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.victormenezes.whatsapp.R;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
+import com.victormenezes.whatsapp.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editLoginEmail;
     private EditText editLoginPassword;
+    private User user;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,41 +34,54 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         editLoginEmail = findViewById(R.id.editLoginEmail);
         editLoginPassword = findViewById(R.id.editLoginPassword);
+        checkUserLogin();
+    }
 
-        ConfigFirebase.getFirebase().child("teste").setValue("helllo");
+    public void Login(View view){
+        String email = editLoginEmail.getText().toString();
+        String password = editLoginPassword.getText().toString();
+        user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        validateLogin();
 
+    }
+
+    private void validateLogin(){
+        auth = ConfigFirebase.getFirebaseAuthentication();
+        auth.signInWithEmailAndPassword(
+                user.getEmail(),
+                user.getPassword()
+        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(LoginActivity.this, "Sucesso ao fazer login", Toast.LENGTH_LONG).show();
+                    openMainActivity();
+                }else {
+                    Toast.makeText(LoginActivity.this, "Erro ao fazer login", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void checkUserLogin(){
+        auth = ConfigFirebase.getFirebaseAuthentication();
+        if(auth.getCurrentUser() != null){
+            openMainActivity();
+        }
+    }
+
+    private void openMainActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public  void createAccount(View view){
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
 
-    }
-
-
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.e("WARN", "ERRO ACEITE");
-        for(int resultado : grantResults){
-            if(resultado == PackageManager.PERMISSION_DENIED){
-                alertPermission();
-            }
-        }
-    }
-
-    public void alertPermission(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Permissões negadas");
-        builder.setMessage("para ultilizar esse app é necessário aceitar as permissões");
-        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 
 }

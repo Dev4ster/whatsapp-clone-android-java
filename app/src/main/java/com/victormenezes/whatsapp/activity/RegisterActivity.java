@@ -67,23 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
                     auth.signOut();
                     finish();
 
-                } else {
-                    String error = "Erro ao cadastrar usuário";
-                    try {
-                        throw task.getException();
-
-                    }catch (FirebaseAuthWeakPasswordException e){
-                        error = "Digite uma senha mais forte, contendo 6 caracteres e com letras e numeros";
-                    } catch (FirebaseAuthInvalidCredentialsException e) {
-                        error = "O email digitado é inválido, digite um novo email";
-                    }catch (FirebaseAuthUserCollisionException e) {
-                        error = "Já existe um usuário com este email cadastrado";
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG)
-                            .show();
                 }
             }
         }).addOnFailureListener(RegisterActivity.this, new OnFailureListener() {
