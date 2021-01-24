@@ -1,6 +1,7 @@
 package com.victormenezes.whatsapp.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.victormenezes.whatsapp.R;
+import com.victormenezes.whatsapp.activity.ConversationActivity;
 import com.victormenezes.whatsapp.adapter.ContactAdapter;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
 import com.victormenezes.whatsapp.helper.Base64Custom;
@@ -90,6 +93,14 @@ public class ContactsFragment extends Fragment {
 
             }
         };
+
+        listContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ConversationActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         return view;
