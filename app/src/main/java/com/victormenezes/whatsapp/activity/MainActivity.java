@@ -26,9 +26,9 @@ import com.victormenezes.whatsapp.R;
 import com.victormenezes.whatsapp.adapter.TabAdapter;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
 import com.victormenezes.whatsapp.helper.Base64Custom;
+import com.victormenezes.whatsapp.helper.Preferences;
 import com.victormenezes.whatsapp.helper.SlidingTabLayout;
 import com.victormenezes.whatsapp.model.Contact;
-import com.victormenezes.whatsapp.model.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private DatabaseReference databaseReference;
     private String contactUser;
+    private Preferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.colorAccent));
         toolbar.setTitle("Meu APP");
         setSupportActionBar(toolbar);
-
+        preferences = new Preferences(this);
         // config adapter
         TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), 1);
         viewPager.setAdapter( tabAdapter );
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         auth.signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        preferences.wipeUser();
         finish();
     }
 

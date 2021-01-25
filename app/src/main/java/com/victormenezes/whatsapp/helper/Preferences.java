@@ -13,8 +13,8 @@ public class Preferences {
     private SharedPreferences.Editor editor;
 
     public static final   String CHAVE_NOME = "nome";
-    public  static final  String CHAVE_TELEFONE = "telefone";
-    public  static final   String CHAVE_TOKEN = "token";
+    public  static final  String CHAVE_ID = "id";
+    public  static final   String CHAVE_EMAIL = "email";
 
 
     public Preferences(Context context){
@@ -23,19 +23,24 @@ public class Preferences {
         editor = sharedPreferences.edit();
     }
 
-    public void saveUser(String nome, String telefone, String token){
+    public void saveUser(String nome, String email, String id){
         editor.putString(CHAVE_NOME,nome);
-        editor.putString(CHAVE_TELEFONE,telefone);
-        editor.putString(CHAVE_TOKEN,token);
+        editor.putString(CHAVE_EMAIL,email);
+        editor.putString(CHAVE_ID,id);
         editor.commit();
 
+    }
+
+    public void wipeUser(){
+        editor.clear();
+        editor.commit();
     }
 
     public HashMap<String, String>  getUser(){
         HashMap<String, String> userData = new HashMap<>();
         userData.put(CHAVE_NOME, sharedPreferences.getString(CHAVE_NOME,CHAVE_NOME));
-        userData.put(CHAVE_TELEFONE, sharedPreferences.getString(CHAVE_TELEFONE,CHAVE_TELEFONE));
-        userData.put(CHAVE_TOKEN, sharedPreferences.getString(CHAVE_TOKEN,CHAVE_TOKEN));
+        userData.put(CHAVE_EMAIL, sharedPreferences.getString(CHAVE_EMAIL,CHAVE_EMAIL));
+        userData.put(CHAVE_ID, sharedPreferences.getString(CHAVE_ID,CHAVE_ID));
         return userData;
     }
 

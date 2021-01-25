@@ -21,6 +21,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_conversation"
         android:layout_above="@id/view_input"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
         android:layout_marginTop="0dp"
         android:padding="8dp" />
 

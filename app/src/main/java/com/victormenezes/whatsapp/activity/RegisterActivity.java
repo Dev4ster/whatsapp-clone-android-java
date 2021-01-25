@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.victormenezes.whatsapp.R;
 import com.victormenezes.whatsapp.config.ConfigFirebase;
 import com.victormenezes.whatsapp.helper.Base64Custom;
+import com.victormenezes.whatsapp.helper.Preferences;
 import com.victormenezes.whatsapp.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -29,15 +30,17 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editRegisterPassword;
     private User user;
     private FirebaseAuth auth;
+    private Preferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        preferences = new Preferences(this);
         editRegisterName = findViewById(R.id.editRegisterName);
         editRegisterEmail = findViewById(R.id.editRegisterEmail);
         editRegisterPassword = findViewById(R.id.editRegisterPassword);
+
     }
 
     public void register(View view){
@@ -93,6 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void openLoginActivity(){
+        preferences.saveUser(user.getName(), user.getEmail(), user.getId());
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
